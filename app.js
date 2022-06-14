@@ -40,23 +40,31 @@ app.use(function(err, req, res, next) {
 
 module.exports = app;
 
-var firebase = require("firebase");
-require("dotenv").config();
- 
-var firebaseConfig = {
-  ßapiKey: process.env.FB_APIKEY,
-  authDomain: process.env.AUTH_DOMAIN,
-  databaseURL: process.env.DB_URL,
-  projectId: process.env.PROJECT_ID,
-  storageBucket: process.env.STORAGE_BUCKET,
-  messagingSenderId: process.env.MESSAGING_SENDER_ID,
-  appId: process.env.APP_ID,
-  measurementId: process.env.MEASUREMENT_ID,
-};
- 
-////////firebase Initialization
-firebase.initializeApp(firebaseConfig);
+var admin = require("firebase-admin");
 
-firebase.database().ref("approved_users/").push({
-  key: "data",
+// Fetch the service account key JSON file contents
+var serviceAccount = require("/Users/yerim/Downloads/key_real/key/test-63f28-firebase-adminsdk-aou5z-3b14d646ec.json");
+
+// Initialize the app with a service account, granting admin privileges
+admin.initializeApp({
+  credential: admin.credential.cert(serviceAccount),
+  databaseURL: "https://test-63f28-default-rtdb.firebaseio.com/"
 });
+
+// As an admin, the app has access to read and write all data, regardless of Security Rules
+var db = admin.database();
+var ref = db.ref("check_in");
+ref.once("value", function(snapshot) {
+  console.log(snapshot.val());
+});
+test();//랜덤키 생성 함수
+async function test() {
+  var key=Math.random().toString(36).slice(2);
+  var random = ref.child("randomkey");
+  random.set({
+    
+     key:key
+    
+    
+  });}
+
