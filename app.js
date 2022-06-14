@@ -40,31 +40,25 @@ app.use(function(err, req, res, next) {
 
 module.exports = app;
 
+
 var admin = require("firebase-admin");
+var firestore = require("firebase-admin/firestore");
 
-// Fetch the service account key JSON file contents
-var serviceAccount = require("/Users/yerim/Downloads/key_real/key/test-63f28-firebase-adminsdk-aou5z-3b14d646ec.json");
+var serviceAccount = require("/Users/yerim/Downloads/checkin/key/test-63f28-firebase-adminsdk-aou5z-3b14d646ec.json");
 
-// Initialize the app with a service account, granting admin privileges
 admin.initializeApp({
-  credential: admin.credential.cert(serviceAccount),
-  databaseURL: "https://test-63f28-default-rtdb.firebaseio.com/"
+  credential: admin.credential.cert(serviceAccount)
 });
 
-// As an admin, the app has access to read and write all data, regardless of Security Rules
-var db = admin.database();
-var ref = db.ref("check_in");
-ref.once("value", function(snapshot) {
-  console.log(snapshot.val());
-});
-test();//랜덤키 생성 함수
+const db = firestore.getFirestore();
+
+test();
+
 async function test() {
   var key=Math.random().toString(36).slice(2);
-  var random = ref.child("randomkey");
-  random.set({
-    
-     key:key
-    
-    
-  });}
+
+  db.collection("key").doc("key").update({
+    key:key
+  });
+}
 
